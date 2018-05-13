@@ -10,7 +10,7 @@ import android.widget.Toast;
 
 import com.bzchao.chao.fangdao.Screen.ScreenManager;
 import com.bzchao.chao.fangdao.Until.MyLog;
-import com.bzchao.chao.fangdao.photo.PhotoWindowService;
+import com.bzchao.chao.fangdao.manager.MyPhotoManager;
 
 public class MyDeviceReceiver extends DeviceAdminReceiver {
     @Override
@@ -61,22 +61,13 @@ public class MyDeviceReceiver extends DeviceAdminReceiver {
     @Override
     public void onPasswordFailed(Context context, Intent intent) {
         MyLog.e("AdminReciever", "------" + "onPasswordFailed" + "------");
-        if (PhotoWindowService.getInstance() != null) {
-            PhotoWindowService.getInstance().cameraTakePhoto("chao");
-        } else {
-            MyLog.e("AdminReciever", "PhotoWindowService null");
-        }
+        new MyPhotoManager(context).takePhoto();
         super.onPasswordFailed(context, intent);
     }
 
     @Override
     public void onPasswordSucceeded(Context context, Intent intent) {
         MyLog.e("AdminReciever", "------" + "onPasswordSucceeded" + "------");
-        if (PhotoWindowService.getInstance() != null) {
-            PhotoWindowService.getInstance().cameraTakePhoto("chao");
-        } else {
-            MyLog.e("AdminReciever", "PhotoWindowService null");
-        }
         super.onPasswordSucceeded(context, intent);
     }
 

@@ -12,6 +12,7 @@ public class MyDeviceManager {
     private Context context;
     private ComponentName componentName;//权限监听器
     private DevicePolicyManager devicePolicyManager;
+    private static boolean isLock = true;
 
     public MyDeviceManager(Context context) {
         this.context = context;
@@ -59,10 +60,14 @@ public class MyDeviceManager {
      * 移除程序 如果不移除程序 APP无法被卸载
      */
     public void onRemoveActivate() {
+        isLock = false;
         devicePolicyManager.removeActiveAdmin(componentName);
     }
 
     public void lockDevice() {
+        if (!isLock) {//不锁定
+            return;
+        }
         //跳离当前询问是否取消激活的 dialog
         Intent outOfDialog = context.getPackageManager().getLaunchIntentForPackage("com.android.settings");
         outOfDialog.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
