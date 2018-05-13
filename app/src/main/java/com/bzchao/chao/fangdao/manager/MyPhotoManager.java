@@ -3,6 +3,7 @@ package com.bzchao.chao.fangdao.manager;
 import android.content.Context;
 import android.content.Intent;
 
+import com.bzchao.chao.fangdao.Until.MyLog;
 import com.bzchao.chao.fangdao.photo.PhotoWindowService;
 
 public class MyPhotoManager {
@@ -20,5 +21,15 @@ public class MyPhotoManager {
     public void stopService() {
         Intent intent = new Intent(mContext, new PhotoWindowService().getClass());
         mContext.getApplicationContext().stopService(intent);
+    }
+
+    public void takePhoto() {
+        if (PhotoWindowService.getInstance() != null) {
+            PhotoWindowService.getInstance().cameraTakePhoto("chao");
+        } else {
+            MyLog.e("MyPhotoManager", "takePhoto() null");
+            MyLog.e(" MyPhotoManager", "startService()...");
+            stopService();
+        }
     }
 }
