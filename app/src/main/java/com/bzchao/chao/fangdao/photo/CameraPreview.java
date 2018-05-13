@@ -73,7 +73,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         try {
             mCamera.stopPreview();
         } catch (Exception e) {
-           MyLog.e(TAG, "当Surface改变后，停止预览出错");
+            MyLog.e(TAG, "当Surface改变后，停止预览出错");
             e.printStackTrace();
         }
 
@@ -85,7 +85,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
             startPreview();
         } catch (Exception e) {
             cameraError = true;
-           MyLog.e(TAG, "预览Camera出错");
+            MyLog.e(TAG, "预览Camera出错");
             e.printStackTrace();
         }
     }
@@ -135,7 +135,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
                 camera = Camera.open(cameraType);
                 camera.setDisplayOrientation(displayOrientation);
             } catch (Exception e) {
-               MyLog.e(TAG, "打开Camera失败,请重新检查");
+                MyLog.e(TAG, "打开Camera失败,请重新检查");
                 e.printStackTrace();
             }
             return camera;
@@ -162,13 +162,13 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
                 Camera.Parameters parameters = mCamera.getParameters();
                 //Camera.Size size = getBestPreviewSize(640, 480, parameters);
                 Camera.Size size = getBestPreviewSize(800, 600, parameters);
-                Camera.Size pictureSize = getBiggestPictureSize(parameters);
+                //Camera.Size pictureSize = getBiggestPictureSize(parameters);
+                Camera.Size pictureSize = getMidPictureSize(parameters);
 
                 if (size != null && pictureSize != null) {
                     //  parameters.setPreviewSize(pictureSize.width, pictureSize.height);//需要注销，否则报错
                     // parameters.setPictureSize(pictureSize.width, pictureSize.height);//照片大小
                     parameters.setPictureSize(pictureSize.width, pictureSize.height);
-                   MyLog.e("PictureSize", pictureSize.width + "," + pictureSize.height);
                     parameters.setPictureFormat(ImageFormat.JPEG);
                     mCamera.setParameters(parameters);
                     cameraConfigured = true;
@@ -242,5 +242,30 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
             }
         }
         return (result);
+    }
+
+    private Camera.Size getMidPictureSize(Camera.Parameters parameters) {
+        int maxArea = 1920 * 1080;//照片输出最大分辨率
+        Camera.Size result = null, resultA = null, resultB = null;
+        for (Camera.Size size : parameters.getSupportedPictureSizes()) {
+            result = size;
+            int sizeArea = size.width * size.height;
+            if (maxArea > sizeArea) {//从小到大遍历，获得最大值
+                resultA = size;
+            }
+            if (maxArea > sizeArea) {//从大到小遍历，满足则复制
+                if (resultB == null)//只得到第一个
+                    resultB = size;
+            }
+
+            if (resultA != null && resultB != null) {
+                if (resultB.width > resultA.width) {
+                    return resultB;
+                } else {
+                    return resultB;
+                }
+            }
+        }
+        return result;
     }
 }
