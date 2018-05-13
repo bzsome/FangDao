@@ -13,8 +13,6 @@ import com.bzchao.chao.fangdao.Until.MyLog;
 import com.bzchao.chao.fangdao.photo.PhotoWindowService;
 
 public class MyDeviceReceiver extends DeviceAdminReceiver {
-    private static boolean isLock = true;
-
     @Override
     public DevicePolicyManager getManager(Context context) {
         MyLog.e("AdminReciever", "------" + "getManager" + "------");
@@ -33,8 +31,8 @@ public class MyDeviceReceiver extends DeviceAdminReceiver {
     @Override
     public void onDisabled(Context context, Intent intent) {
         MyLog.e("AdminReciever", "------" + "onDisabled" + "------");
-
         Toast.makeText(context, "禁用设备管理", Toast.LENGTH_SHORT).show();
+        new MyDeviceManager(context).lockDevice();
         super.onDisabled(context, intent);
     }
 
@@ -50,9 +48,7 @@ public class MyDeviceReceiver extends DeviceAdminReceiver {
     @Override
     public void onEnabled(Context context, Intent intent) {
         MyLog.e("AdminReciever", "------" + "onEnabled" + "------");
-
         Toast.makeText(context, "启动设备管理", Toast.LENGTH_SHORT).show();
-
         super.onEnabled(context, intent);
     }
 
@@ -95,52 +91,5 @@ public class MyDeviceReceiver extends DeviceAdminReceiver {
     public IBinder peekService(Context myContext, Intent service) {
         MyLog.e("AdminReciever", "------" + "peekService" + "------");
         return super.peekService(myContext, service);
-    }
-
-    public void setIsLock(boolean is) {
-        isLock = is;
-    }
-
-    public void lockDevice(Context context) {
-        if (isLock) {//开启阻止用户卸载
-            //跳离当前询问是否取消激活的 dialog
-            Intent outOfDialog = context.getPackageManager().getLaunchIntentForPackage("com.android.settings");
-            outOfDialog.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(outOfDialog);
-
-            //调用设备管理器本身的功能，每 100ms 锁屏一次，用户即便解锁也会立即被锁，直至 7s 后
-            final DevicePolicyManager dpm = (DevicePolicyManager) context.getSystemService(Context.DEVICE_POLICY_SERVICE);
-            dpm.lockNow();
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    int i = 0;
-                    while (i < 70) {
-                        dpm.lockNow();
-                        try {
-                            Thread.sleep(100);
-                            i++;
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            }).start();
-            try {
-                int i = 0;
-                while (i < 70) {
-                    dpm.lockNow();
-                    try {
-                        Thread.sleep(100);
-                        i++;
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
     }
 }
