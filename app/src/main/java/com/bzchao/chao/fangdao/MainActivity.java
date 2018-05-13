@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
                 new MyDeviceManager(getContext()).registerDevicePolicyManager();
             }
         });
-        btnRemove = findViewById(R.id.actionDevice);
+        btnRemove = findViewById(R.id.removeDevice);
         btnRemove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
