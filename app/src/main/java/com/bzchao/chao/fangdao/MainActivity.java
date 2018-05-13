@@ -17,6 +17,8 @@ import android.widget.Button;
 import com.bzchao.chao.fangdao.Screen.ScreenManager;
 import com.bzchao.chao.fangdao.device.MyDeviceManager;
 
+import cn.bmob.v3.Bmob;
+
 public class MainActivity extends AppCompatActivity {
     Button btnReg, btnRemove;
 

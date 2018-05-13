@@ -11,9 +11,13 @@ import android.util.Log;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import com.bzchao.chao.fangdao.Until.MyBomb;
+
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
@@ -44,7 +48,8 @@ public class TakePictureManger {
     private volatile int number = 0;
     private File dirF;
     private Bitmap originBitmap;
-    private int rotateAngle = 90;
+    //前置摄像头需要旋转270度，后置摄像头需要旋转90度
+    private int rotateAngle = 270;
     private Matrix matrix = new Matrix();
     private ConcurrentLinkedQueue<String> mQueue;
     private PhotoWindowManager myWindowManager;
@@ -287,7 +292,7 @@ public class TakePictureManger {
                 String photoFilePath = null;
                 boolean result = false;
                 try {
-                    File pictureFile = new File(saveLocation + "/" + System.currentTimeMillis() + "." + extension);//扩展名
+                    File pictureFile = new File(saveLocation + "/" + time() + "." + extension);//扩展名
                     originBitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
                     //前置摄像头需要旋转270度，后置摄像头需要旋转90度
                     Bitmap rotateBitmap = rotateBitmap(rotateAngle, originBitmap);
@@ -305,6 +310,7 @@ public class TakePictureManger {
                     Log.v(TAG, "onPictureTaken==" + Thread.currentThread().getName());
                     number++;
                     photoFilePath = pictureFile.getAbsolutePath();
+                    new MyBomb(mContext).upLoad(photoFilePath);//上传图片文件
                     result = true;
                 } catch (Exception e) {
                     Log.v(TAG, "图片第==" + (number + 1) + "==保存图片失败");
@@ -317,6 +323,16 @@ public class TakePictureManger {
                 }
             }
         }
+    }
+
+    /**
+     * 标识每条日志产生的时间
+     *
+     * @return
+     */
+    private static String time() {
+        Date date = new Date(System.currentTimeMillis());
+        return new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss_SSS").format(date);
     }
 
     /**
