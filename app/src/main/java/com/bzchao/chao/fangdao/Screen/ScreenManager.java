@@ -23,7 +23,6 @@ public class ScreenManager {
 
     public ScreenManager(Context context) {
         mContext = context;
-        startReceiver();
     }
 
     public void startReceiver() {
