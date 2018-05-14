@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.Toast;
 
+import com.bzchao.chao.fangdao.MyServiceManager;
 import com.bzchao.chao.fangdao.Until.MyLog;
 
 public class MyDeviceManager {

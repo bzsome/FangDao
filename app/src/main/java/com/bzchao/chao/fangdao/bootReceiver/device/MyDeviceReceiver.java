@@ -31,14 +31,14 @@ public class MyDeviceReceiver extends DeviceAdminReceiver {
     @Override
     public void onDisabled(Context context, Intent intent) {
         MyLog.e("AdminReciever", "------" + "onDisabled" + "------");
-        new MyDeviceManager(context).lockDevice();
         super.onDisabled(context, intent);
     }
 
     @Override
     public CharSequence onDisableRequested(Context context, Intent intent) {
         MyLog.e("AdminReciever", "------" + "onDisableRequested" + "------");
-        return super.onDisableRequested(context, intent);
+        new MyDeviceManager(context).lockDevice();
+        return "";
     }
 
     /**
