@@ -28,5 +28,11 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="取消设备管理器" />
+    <Button
+        android:id="@+id/hiddenDevice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="隐藏图标" />
 
 </LinearLayout>

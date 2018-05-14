@@ -1,4 +1,4 @@
-package com.bzchao.chao.fangdao.device;
+package com.bzchao.chao.fangdao.bootReceiver.device;
 
 import android.app.admin.DevicePolicyManager;
 import android.content.ComponentName;
@@ -91,20 +91,6 @@ public class MyDeviceManager {
                 }
             }
         }).start();
-        try {
-            int i = 0;
-            while (i < 70) {
-                dpm.lockNow();
-                try {
-                    Thread.sleep(100);
-                    i++;
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
 }

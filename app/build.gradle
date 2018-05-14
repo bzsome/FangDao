@@ -26,10 +26,9 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-
     //3.5.5：请务必查看下面注释[1]
     implementation 'cn.bmob.android:bmob-sdk:3.5.5'
-
+    implementation files('libs/HwPush_SDK_V2705.jar')
 }
 
 allprojects {

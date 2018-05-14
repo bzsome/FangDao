@@ -1,10 +1,9 @@
-package com.bzchao.chao.fangdao.manager;
+package com.bzchao.chao.fangdao.photo;
 
 import android.content.Context;
 import android.content.Intent;
 
 import com.bzchao.chao.fangdao.Until.MyLog;
-import com.bzchao.chao.fangdao.photo.PhotoWindowService;
 
 public class MyPhotoManager {
     private static Context mContext;
@@ -28,8 +27,8 @@ public class MyPhotoManager {
             PhotoWindowService.getInstance().cameraTakePhoto("chao");
         } else {
             MyLog.e("MyPhotoManager", "takePhoto() null");
-            MyLog.e(" MyPhotoManager", "startService()...");
-            stopService();
+            MyLog.e("MyPhotoManager", "startService()...");
+            startService();
         }
     }
 }

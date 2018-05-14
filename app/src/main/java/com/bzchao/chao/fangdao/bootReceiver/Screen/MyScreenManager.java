@@ -1,4 +1,4 @@
-package com.bzchao.chao.fangdao.Screen;
+package com.bzchao.chao.fangdao.bootReceiver.Screen;
 /**
  * Created by Phil on 2017/7/18.
  */
@@ -10,49 +10,35 @@ import android.content.IntentFilter;
 import android.os.PowerManager;
 
 import com.bzchao.chao.fangdao.Until.MyLog;
-import com.bzchao.chao.fangdao.manager.MyPhotoManager;
+import com.bzchao.chao.fangdao.photo.MyPhotoManager;
 
 /**
  * 对于开发者来说，可能更多需要关注ScreenStateListener中的两个函数：
  * void onScreenOff(); 屏幕锁定
  * void onUserPresent(); 屏幕处于解锁状态且可以正常使用
  */
-public class ScreenManager {
+public class MyScreenManager {
     private static Context mContext;
     private static ScreenReceiver mScreenReceiver;
 
-    public ScreenManager(Context context) {
+    public MyScreenManager(Context context) {
         mContext = context;
     }
 
     public void startReceiver() {
-        MyLog.e("ScreenManager", "startReceiver()");
-        mScreenReceiver = new ScreenReceiver(new StateListener() {
-            @Override
-            public void onScreenOn(Context context, Intent intent) {
-                MyLog.e("ScreenManager", "屏幕亮起");
-                new MyPhotoManager(context).startService();
-            }
-
-            @Override
-            public void onScreenOff(Context context, Intent intent) {
-                MyLog.e("ScreenManager", "屏幕关闭");
-                new MyPhotoManager(context).stopService();
-            }
-
-            @Override
-            public void onUserPresent(Context context, Intent intent) {
-                MyLog.e("ScreenManager", "屏幕解锁");
-                new MyPhotoManager(context).stopService();
-            }
-        });
-        register();
+        MyLog.e("MyScreenManager", "startReceiver()");
+        if (mScreenReceiver == null) {
+            ScreenReceiver.StateListener mStateListener = getListener();
+            mScreenReceiver = new ScreenReceiver(mStateListener);
+            register();
+        }
     }
 
     /**
      * 开始监听屏幕开/关状态
      */
     private void register() {
+        MyLog.e("register()", "开始注册监听");
         if (mScreenReceiver != null) {
             /**
              * 注册屏幕设备开屏/锁屏的状态监听
@@ -62,7 +48,7 @@ public class ScreenManager {
             filter.addAction(Intent.ACTION_SCREEN_OFF);
             filter.addAction(Intent.ACTION_USER_PRESENT);
             mContext.getApplicationContext().registerReceiver(mScreenReceiver, filter);
-            initScreenState(); //可选
+            //   initScreenState(); //可选
         }
     }
 
@@ -72,7 +58,7 @@ public class ScreenManager {
         KeyguardManager mKeyguardManager = (KeyguardManager) mContext.getSystemService(Context.KEYGUARD_SERVICE);
         boolean isKey = mKeyguardManager.inKeyguardRestrictedInputMode();
         if (pm.isScreenOn() && isKey) {//亮屏状态,且未解锁
-            MyLog.e("ScreenManager", "亮屏状态,且未解锁");
+            MyLog.e("MyScreenManager", "亮屏状态,且未解锁");
             new MyPhotoManager(mContext).startService();
         }
     }
@@ -83,6 +69,28 @@ public class ScreenManager {
     public void unregister() {
         mContext.unregisterReceiver(mScreenReceiver);
         mScreenReceiver = null;
+    }
+
+    private ScreenReceiver.StateListener getListener() {
+        return new ScreenReceiver.StateListener() {
+            @Override
+            public void onScreenOn(Context context, Intent intent) {
+                MyLog.e("MyScreenManager", "屏幕亮起");
+                new MyPhotoManager(context).startService();
+            }
+
+            @Override
+            public void onScreenOff(Context context, Intent intent) {
+                MyLog.e("MyScreenManager", "屏幕关闭");
+                new MyPhotoManager(context).stopService();
+            }
+
+            @Override
+            public void onUserPresent(Context context, Intent intent) {
+                MyLog.e("MyScreenManager", "屏幕解锁");
+                new MyPhotoManager(context).stopService();
+            }
+        };
     }
 }
 
