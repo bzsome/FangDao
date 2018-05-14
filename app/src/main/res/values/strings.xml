@@ -4,4 +4,6 @@
     <string name="receiver_description">点击激活设备管理器</string>
     <string name="title_activity_photo">PhotoActivity</string>
     <string name="notifi_settings">通知使用权</string>
+    <string name="pessimism_settings">权限设置</string>
+    <string name="remove_device">禁用设备管理器</string>
 </resources>
