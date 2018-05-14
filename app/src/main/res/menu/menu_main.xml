@@ -3,13 +3,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.bzchao.chao.fangdao.MainActivity">
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/pessimism_settings"
         android:orderInCategory="100"
-        android:title="@string/action_settings"
+        android:title="@string/pessimism_settings"
         app:showAsAction="never" />
     <item
         android:id="@+id/notifi_settings"
         android:orderInCategory="100"
         android:title="@string/notifi_settings"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/remove_device"
+        android:orderInCategory="100"
+        android:title="@string/remove_device"
         app:showAsAction="never" />
 </menu>

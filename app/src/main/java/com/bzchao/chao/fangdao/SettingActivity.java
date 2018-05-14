@@ -1,7 +1,9 @@
 package com.bzchao.chao.fangdao;
 
+import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -15,11 +17,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.bzchao.chao.fangdao.bootReceiver.device.MyDeviceManager;
 
 public class SettingActivity extends AppCompatActivity {
-    Button btnReg, btnRemove, btnHidden, btnShow;
+    Button btnReg, btnHidden, btnShow;
     SettingActivity context;
 
     @Override
@@ -49,13 +52,7 @@ public class SettingActivity extends AppCompatActivity {
                 new MyDeviceManager(context).registerDevicePolicyManager();
             }
         });
-        btnRemove = findViewById(R.id.removeDevice);
-        btnRemove.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new MyDeviceManager(context).onRemoveActivate();
-            }
-        });
+
         btnHidden = findViewById(R.id.hiddenDevice);
         btnHidden.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,11 +85,14 @@ public class SettingActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         switch (id) {
-            case R.id.action_settings:
+            case R.id.pessimism_settings:
                 getAppDetailSettingIntent(context);
                 return true;
             case R.id.notifi_settings:
                 gotoNotificationAccessSetting(context);
+                return true;
+            case R.id.remove_device:
+                showRemoveDevice();
                 return true;
         }
 
@@ -137,5 +137,23 @@ public class SettingActivity extends AppCompatActivity {
             }
             return false;
         }
+    }
+
+    public void showRemoveDevice() {
+        AlertDialog dialog = new AlertDialog.Builder(context)
+                .setIcon(R.mipmap.ic_launcher)//设置标题的图片
+                .setTitle("提示")//设置对话框的标题
+                .setMessage("是否禁用设备管理器？")//设置对话框的内容
+                //设置对话框的按钮
+                .setNegativeButton("取消", null)
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        new MyDeviceManager(context).onRemoveActivate();
+                        Toast.makeText(context, "已禁用设备管理器", Toast.LENGTH_SHORT).show();
+                        dialog.dismiss();
+                    }
+                }).create();
+        dialog.show();
     }
 }
