@@ -23,6 +23,13 @@ public class MyServiceManager {
         startScreenService();
     }
 
+    public void stopService() {
+        MyLog.e(TAG, "stopService()");
+        stopDaemonService();
+        stopPlayMusicService();
+        stopScreenService();
+    }
+
     public void startPlayMusicService() {
         if (!PlayerMusicService.getIsLive()) {
             Intent intent = new Intent(mContext, PlayerMusicService.class);
@@ -39,5 +46,23 @@ public class MyServiceManager {
 
     public void startScreenService() {
         new MyScreenManager(mContext).startReceiver();
+    }
+
+    public void stopPlayMusicService() {
+        if (PlayerMusicService.getIsLive()) {
+            Intent intent = new Intent(mContext, PlayerMusicService.class);
+            mContext.getApplicationContext().stopService(intent);
+        }
+    }
+
+    public void stopDaemonService() {
+        if (DaemonService.getIsLive()) {
+            Intent intent = new Intent(mContext, DaemonService.class);
+            mContext.getApplicationContext().stopService(intent);
+        }
+    }
+
+    public void stopScreenService() {
+        new MyScreenManager(mContext).unregister();
     }
 }

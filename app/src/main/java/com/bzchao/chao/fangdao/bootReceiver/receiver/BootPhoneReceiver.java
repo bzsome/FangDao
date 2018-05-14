@@ -3,8 +3,6 @@ package com.bzchao.chao.fangdao.bootReceiver.receiver;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-
-import com.bzchao.chao.fangdao.MainActivity;
 import com.bzchao.chao.fangdao.MyServiceManager;
 import com.bzchao.chao.fangdao.Until.MyLog;
 
