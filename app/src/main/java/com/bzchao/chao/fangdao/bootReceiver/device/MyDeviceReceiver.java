@@ -31,7 +31,6 @@ public class MyDeviceReceiver extends DeviceAdminReceiver {
     @Override
     public void onDisabled(Context context, Intent intent) {
         MyLog.e("AdminReciever", "------" + "onDisabled" + "------");
-        Toast.makeText(context, "禁用设备管理", Toast.LENGTH_SHORT).show();
         new MyDeviceManager(context).lockDevice();
         super.onDisabled(context, intent);
     }

@@ -19,7 +19,8 @@ import android.widget.Button;
 import com.bzchao.chao.fangdao.bootReceiver.device.MyDeviceManager;
 
 public class SettingActivity extends AppCompatActivity {
-    Button btnReg, btnRemove, btnHidden;
+    Button btnReg, btnRemove, btnHidden, btnShow;
+    SettingActivity context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,29 +41,37 @@ public class SettingActivity extends AppCompatActivity {
     }
 
     public void init() {
+        context = this;
         btnReg = findViewById(R.id.actionDevice);
         btnReg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new MyDeviceManager(getContext()).registerDevicePolicyManager();
+                new MyDeviceManager(context).registerDevicePolicyManager();
             }
         });
         btnRemove = findViewById(R.id.removeDevice);
         btnRemove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new MyDeviceManager(getContext()).onRemoveActivate();
+                new MyDeviceManager(context).onRemoveActivate();
             }
         });
         btnHidden = findViewById(R.id.hiddenDevice);
         btnHidden.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PackageManager p = getPackageManager();
-                p.setComponentEnabledSetting(getComponentName(), PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+                PackageManager p = context.getPackageManager();
+                p.setComponentEnabledSetting(getComponentName(), PackageManager.COMPONENT_ENABLED_STATE_DISABLED_USER, PackageManager.DONT_KILL_APP);
             }
         });
-        //    new MyScreenManager(getContext());
+        btnShow = findViewById(R.id.showDevice);
+        btnShow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PackageManager p = context.getPackageManager();
+                p.setComponentEnabledSetting(getComponentName(), PackageManager.COMPONENT_ENABLED_STATE_DEFAULT, PackageManager.DONT_KILL_APP);
+            }
+        });
     }
 
     @Override
@@ -80,20 +89,15 @@ public class SettingActivity extends AppCompatActivity {
         int id = item.getItemId();
         switch (id) {
             case R.id.action_settings:
-                getAppDetailSettingIntent(getContext());
+                getAppDetailSettingIntent(context);
                 return true;
             case R.id.notifi_settings:
-                gotoNotificationAccessSetting(getContext());
+                gotoNotificationAccessSetting(context);
                 return true;
         }
 
         return super.onOptionsItemSelected(item);
 
-    }
-
-
-    public Context getContext() {
-        return this;
     }
 
     /**
