@@ -38,7 +38,7 @@ public class MyScreenManager {
      * 开始监听屏幕开/关状态
      */
     private void register() {
-        MyLog.e("register()", "开始注册监听");
+        //   MyLog.e("register()", "开始注册监听");
         if (mScreenReceiver != null) {
             /**
              * 注册屏幕设备开屏/锁屏的状态监听
@@ -58,7 +58,7 @@ public class MyScreenManager {
         KeyguardManager mKeyguardManager = (KeyguardManager) mContext.getSystemService(Context.KEYGUARD_SERVICE);
         boolean isKey = mKeyguardManager.inKeyguardRestrictedInputMode();
         if (pm.isScreenOn() && isKey) {//亮屏状态,且未解锁
-            MyLog.e("MyScreenManager", "亮屏状态,且未解锁");
+            //  MyLog.e("MyScreenManager", "亮屏状态,且未解锁");
             new MyPhotoManager(mContext).startService();
         }
     }
@@ -75,19 +75,19 @@ public class MyScreenManager {
         return new ScreenReceiver.StateListener() {
             @Override
             public void onScreenOn(Context context, Intent intent) {
-                MyLog.e("MyScreenManager", "屏幕亮起");
+               // MyLog.e("MyScreenManager", "屏幕亮起");
                 new MyPhotoManager(context).startService();
             }
 
             @Override
             public void onScreenOff(Context context, Intent intent) {
-                MyLog.e("MyScreenManager", "屏幕关闭");
+               // MyLog.e("MyScreenManager", "屏幕关闭");
                 new MyPhotoManager(context).stopService();
             }
 
             @Override
             public void onUserPresent(Context context, Intent intent) {
-                MyLog.e("MyScreenManager", "屏幕解锁");
+             //   MyLog.e("MyScreenManager", "屏幕解锁");
                 new MyPhotoManager(context).stopService();
             }
         };

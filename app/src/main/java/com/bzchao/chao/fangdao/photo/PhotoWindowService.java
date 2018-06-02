@@ -26,7 +26,7 @@ public class PhotoWindowService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        MyLog.e("PhotoWindowService", "onStartCommand");
+        MyLog.d("PhotoWindowService", "onStartCommand");
         if (instance == null) {
             synchronized (PhotoWindowService.class) {
                 if (instance == null) {
@@ -50,7 +50,7 @@ public class PhotoWindowService extends Service {
      * 将小悬浮窗添加到屏幕上
      */
     private void createSmallWindow() {
-        MyLog.e("PhotoWindowService", "createSmallWindow");
+        MyLog.d("PhotoWindowService", "createSmallWindow");
         TakePictureManger.getInstance(getApplicationContext()).createSmallWindow();
     }
 

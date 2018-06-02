@@ -73,7 +73,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         try {
             mCamera.stopPreview();
         } catch (Exception e) {
-            MyLog.e(TAG, "当Surface改变后，停止预览出错");
+            MyLog.d(TAG, "当Surface改变后，停止预览出错");
             e.printStackTrace();
         }
 

@@ -27,7 +27,6 @@ public class MyPhotoManager {
             PhotoWindowService.getInstance().cameraTakePhoto("chao");
         } else {
             MyLog.e("MyPhotoManager", "takePhoto() null");
-            MyLog.e("MyPhotoManager", "startService()...");
             startService();
         }
     }

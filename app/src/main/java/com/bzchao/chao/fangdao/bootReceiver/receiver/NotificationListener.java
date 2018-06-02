@@ -15,12 +15,12 @@ public class NotificationListener extends NotificationListenerService {
 
     @Override
     public void onNotificationRemoved(StatusBarNotification sbn) {
-        MyLog.e(TAG, "Notification removed");
+        // MyLog.e(TAG, "Notification removed");
     }
 
     @Override
     public void onNotificationPosted(StatusBarNotification sbn) {
-        MyLog.e(TAG, "Notification posted");
+        //    MyLog.e(TAG, "Notification posted");
     }
 
     @Override

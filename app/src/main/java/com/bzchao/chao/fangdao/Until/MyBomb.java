@@ -37,7 +37,7 @@ public class MyBomb {
 
             @Override
             public void done(BmobException e) {
-                MyLog.e("MyBomb", "上传完成！");
+                MyLog.d("MyBomb", "上传完成！");
                 MyLog.e("上传链接", bmobFile.getFileUrl());
             }
         });
