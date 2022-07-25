@@ -6,7 +6,6 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.Build;
 import android.os.IBinder;
-import android.support.annotation.Nullable;
 
 import com.bzchao.chao.fangdao.R;
 import com.bzchao.chao.fangdao.Until.MyLog;
@@ -25,7 +24,6 @@ public class DaemonService extends Service {
     public static final int NOTICE_ID = 100;
     private static boolean isLvie = false;
 
-    @Nullable
     @Override
     public IBinder onBind(Intent intent) {
         return null;

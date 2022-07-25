@@ -4,7 +4,6 @@ import android.app.Service;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.IBinder;
-import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.bzchao.chao.fangdao.R;
@@ -24,7 +23,6 @@ public class PlayerMusicService extends Service {
     //储存服务状态
     private static boolean isLvie = false;
 
-    @Nullable
     @Override
     public IBinder onBind(Intent intent) {
         return null;
