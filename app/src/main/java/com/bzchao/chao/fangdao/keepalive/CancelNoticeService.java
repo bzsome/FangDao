@@ -35,19 +35,16 @@ public class CancelNoticeService extends Service {
             builder.setSmallIcon(R.mipmap.ic_launcher);
             startForeground(DaemonService.NOTICE_ID, builder.build());
             // 开启一条线程，去移除DaemonService弹出的通知
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    // 延迟1s
-                    SystemClock.sleep(1000);
-                    // 取消CancelNoticeService的前台
-                    stopForeground(true);
-                    // 移除DaemonService弹出的通知
-                    NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-                    manager.cancel(DaemonService.NOTICE_ID);
-                    // 任务完成，终止自己
-                    stopSelf();
-                }
+            new Thread(() -> {
+                // 延迟1s
+                SystemClock.sleep(1000);
+                // 取消CancelNoticeService的前台
+                stopForeground(true);
+                // 移除DaemonService弹出的通知
+                NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                manager.cancel(DaemonService.NOTICE_ID);
+                // 任务完成，终止自己
+                stopSelf();
             }).start();
         }
         return super.onStartCommand(intent, flags, startId);

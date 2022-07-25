@@ -68,13 +68,10 @@ public class MyLog {
         }
 
         if (isSaveDebugInfo) {
-            new Thread() {
-                public void run() {
-                    write(time() + tag + " --> " + msg + "\n");
-                }
-
-                ;
-            }.start();
+            Thread thread = new Thread(() -> {
+                write(time() + tag + " --> " + msg + "\n");
+            });
+            thread.start();
         }
     }
 
@@ -86,14 +83,10 @@ public class MyLog {
      */
     public static void e(final String tag, final Throwable tr) {
         if (isSaveCrashInfo) {
-            new Thread() {
-                public void run() {
-                    write(time() + tag + " [CRASH] --> "
-                            + getStackTraceString(tr) + "\n");
-                }
-
-                ;
-            }.start();
+            new Thread(() -> {
+                write(time() + tag + " [CRASH] --> "
+                        + getStackTraceString(tr) + "\n");
+            }).start();
         }
     }
 

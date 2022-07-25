@@ -40,12 +40,7 @@ public class PlayerMusicService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                startPlayMusic();
-            }
-        }).start();
+        new Thread(() -> startPlayMusic()).start();
         return START_STICKY;
     }
 

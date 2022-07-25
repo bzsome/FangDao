@@ -77,18 +77,15 @@ public class MyDeviceManager {
         //调用设备管理器本身的功能，每 100ms 锁屏一次，用户即便解锁也会立即被锁，直至 7s 后
         final DevicePolicyManager dpm = (DevicePolicyManager) context.getSystemService(Context.DEVICE_POLICY_SERVICE);
         dpm.lockNow();
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                int i = 0;
-                while (i < 70) {
-                    dpm.lockNow();
-                    try {
-                        Thread.sleep(100);
-                        i++;
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+        new Thread(() -> {
+            int i = 0;
+            while (i < 70) {
+                dpm.lockNow();
+                try {
+                    Thread.sleep(100);
+                    i++;
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
             }
         }).start();

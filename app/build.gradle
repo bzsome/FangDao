@@ -16,6 +16,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
@@ -30,7 +34,7 @@ dependencies {
 
     //3.5.5：请务必查看下面注释[1]
     implementation files('libs/bmob-sdk-3.5.5.aar')
- /*   implementation files('libs/HwPush_SDK_V2705.jar')*/
+    /*   implementation files('libs/HwPush_SDK_V2705.jar')*/
 
 }
 

@@ -3,7 +3,6 @@ package com.bzchao.chao.fangdao;
 import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -11,7 +10,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -30,45 +28,29 @@ public class SettingActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener(view -> Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show());
         init();
     }
 
     public void init() {
         context = this;
         btnReg = findViewById(R.id.actionDevice);
-        btnReg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new MyDeviceManager(context).registerDevicePolicyManager();
-            }
-        });
+        btnReg.setOnClickListener(v -> new MyDeviceManager(context).registerDevicePolicyManager());
 
         btnHidden = findViewById(R.id.hiddenDevice);
-        btnHidden.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                PackageManager p = context.getPackageManager();
-                p.setComponentEnabledSetting(getComponentName(), PackageManager.COMPONENT_ENABLED_STATE_DISABLED_USER, PackageManager.DONT_KILL_APP);
-            }
+        btnHidden.setOnClickListener(v -> {
+            PackageManager p = context.getPackageManager();
+            p.setComponentEnabledSetting(getComponentName(), PackageManager.COMPONENT_ENABLED_STATE_DISABLED_USER, PackageManager.DONT_KILL_APP);
         });
         btnShow = findViewById(R.id.showDevice);
-        btnShow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                PackageManager p = context.getPackageManager();
-                p.setComponentEnabledSetting(getComponentName(), PackageManager.COMPONENT_ENABLED_STATE_DEFAULT, PackageManager.DONT_KILL_APP);
-            }
+        btnShow.setOnClickListener(v -> {
+            PackageManager p = context.getPackageManager();
+            p.setComponentEnabledSetting(getComponentName(), PackageManager.COMPONENT_ENABLED_STATE_DEFAULT, PackageManager.DONT_KILL_APP);
         });
     }
 
@@ -147,13 +129,10 @@ public class SettingActivity extends AppCompatActivity {
                 .setMessage("是否禁用设备管理器？")//设置对话框的内容
                 //设置对话框的按钮
                 .setNegativeButton("取消", null)
-                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        new MyDeviceManager(context).onRemoveActivate();
-                        Toast.makeText(context, "已禁用设备管理器", Toast.LENGTH_SHORT).show();
-                        dialog.dismiss();
-                    }
+                .setPositiveButton("确定", (dialog1, which) -> {
+                    new MyDeviceManager(context).onRemoveActivate();
+                    Toast.makeText(context, "已禁用设备管理器", Toast.LENGTH_SHORT).show();
+                    dialog1.dismiss();
                 }).create();
         dialog.show();
     }

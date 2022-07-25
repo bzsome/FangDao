@@ -77,21 +77,15 @@ public class TakePictureManger {
     public void init() {
         myWindowManager = new PhotoWindowManager(mContext);
         mExecutorService3 = Executors.newSingleThreadExecutor();
-        mExecutorService = Executors.newSingleThreadExecutor(new ThreadFactory() {
-            @Override
-            public Thread newThread(Runnable runnable) {
-                Thread thread = new Thread(runnable);
-                thread.setName("Thread--" + number);
-                return thread;
-            }
+        mExecutorService = Executors.newSingleThreadExecutor(runnable -> {
+            Thread thread = new Thread(runnable);
+            thread.setName("Thread--" + number);
+            return thread;
         });
-        mExecutorService2 = Executors.newSingleThreadExecutor(new ThreadFactory() {
-            @Override
-            public Thread newThread(Runnable runnable) {
-                Thread thread = new Thread(runnable);
-                thread.setName("PictureCallbackThread--");
-                return thread;
-            }
+        mExecutorService2 = Executors.newSingleThreadExecutor(runnable -> {
+            Thread thread = new Thread(runnable);
+            thread.setName("PictureCallbackThread--");
+            return thread;
         });
 //        saveLocation = Environment.getExternalStorageDirectory().getAbsolutePath() + "/aTestDir";
 //        saveLocation = context.getFilesDir().getAbsolutePath() + "/aTestDir";
@@ -133,25 +127,22 @@ public class TakePictureManger {
             Toast.makeText(mContext, "cameraError==", Toast.LENGTH_SHORT).show();
             return;
         }
-        mExecutorService3.execute(new Runnable() {
-            @Override
-            public void run() {
-                synchronized (object) {
-                    while (!canFlag) {
-                        try {
-                            object.wait();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    Log.v(TAG, "cameraTakePhoto==" + Thread.currentThread().getName());
+        mExecutorService3.execute(() -> {
+            synchronized (object) {
+                while (!canFlag) {
                     try {
-                        mQueue.add(betweenStr);
-                        mExecutorService.execute(new PhotoRunnable(autoFocusTime));
-                        canFlag = false;
-                    } catch (Exception e) {
+                        object.wait();
+                    } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
+                }
+                Log.v(TAG, "cameraTakePhoto==" + Thread.currentThread().getName());
+                try {
+                    mQueue.add(betweenStr);
+                    mExecutorService.execute(new PhotoRunnable(autoFocusTime));
+                    canFlag = false;
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         });
@@ -170,20 +161,17 @@ public class TakePictureManger {
                 object.notifyAll();
             } else {
                 if (number < cameraStop) {
-                    mPreview.getCamera().autoFocus(new AutoFocusCallback() {
-                        @Override
-                        public void onAutoFocus(boolean success, Camera camera) {
-                            Log.v(TAG, "onAutoFocus====success==" + success);
-                            Log.v(TAG, "onPictureTaken==" + Thread.currentThread().getName());
-                            // 从Camera捕获图片
-                            try {
-                                mPreview.getCamera().takePicture(null, null, mPicture);
-                            } catch (Exception e) {
-                                canFlag = false;
-                                object.notifyAll();
-                                Log.v(TAG, "mCamera.takePicture==Exception=" + e.getMessage());
-                                resetData();
-                            }
+                    mPreview.getCamera().autoFocus((success, camera) -> {
+                        Log.v(TAG, "onAutoFocus====success==" + success);
+                        Log.v(TAG, "onPictureTaken==" + Thread.currentThread().getName());
+                        // 从Camera捕获图片
+                        try {
+                            mPreview.getCamera().takePicture(null, null, mPicture);
+                        } catch (Exception e) {
+                            canFlag = false;
+                            object.notifyAll();
+                            Log.v(TAG, "mCamera.takePicture==Exception=" + e.getMessage());
+                            resetData();
                         }
                     });
                 } else {
@@ -355,12 +343,7 @@ public class TakePictureManger {
             if (mPreview.isSurfaceCreated()) {
                 takePhoto();
             } else {
-                mPreview.setSurfaceCreatedListener(new CameraPreview.SurfaceCreatedListener() {
-                    @Override
-                    public void surfaceCreated() {
-                        takePhoto();
-                    }
-                });
+                mPreview.setSurfaceCreatedListener(() -> takePhoto());
             }
         }
     }

@@ -180,12 +180,9 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     private void startPreview() {
         if (cameraConfigured && mCamera != null) {
             mCamera.startPreview();
-            mCamera.setErrorCallback(new Camera.ErrorCallback() {
-                @Override
-                public void onError(int error, Camera camera) {
-                    cameraError = true;
-                    Toast.makeText(getContext(), "Camera.setErrorCallback==error=" + error, Toast.LENGTH_SHORT).show();
-                }
+            mCamera.setErrorCallback((error, camera) -> {
+                cameraError = true;
+                Toast.makeText(getContext(), "Camera.setErrorCallback==error=" + error, Toast.LENGTH_SHORT).show();
             });
             if (surfaceCreatedListener != null) {
                 surfaceCreatedListener.surfaceCreated();
