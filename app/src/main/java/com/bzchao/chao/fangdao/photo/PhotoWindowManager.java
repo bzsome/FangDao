@@ -3,6 +3,7 @@ package com.bzchao.chao.fangdao.photo;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PixelFormat;
+import android.os.Build;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.Gravity;
@@ -55,6 +56,13 @@ public class PhotoWindowManager {
         int viewWidth = containerView.getLayoutParams().width;
         int viewHeight = containerView.getLayoutParams().height;
         WindowManager.LayoutParams layoutParams = new LayoutParams();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            layoutParams.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
+        } else {
+            layoutParams.type = WindowManager.LayoutParams.TYPE_PHONE;// 系统提示window
+        }
+
         layoutParams.type = LayoutParams.TYPE_PHONE;
         layoutParams.format = PixelFormat.RGBA_8888;
         layoutParams.flags = LayoutParams.FLAG_NOT_TOUCH_MODAL | LayoutParams.FLAG_NOT_FOCUSABLE;
@@ -65,7 +73,7 @@ public class PhotoWindowManager {
         layoutParams.x = screenWidth / 2;
         layoutParams.y = screenHeight;
         windowManager.addView(frameLayout, layoutParams);
-        mSurfaceContainer = (FrameLayout) frameLayout.findViewById(R.id.percent);
+        mSurfaceContainer = frameLayout.findViewById(R.id.percent);
     }
 
     /**

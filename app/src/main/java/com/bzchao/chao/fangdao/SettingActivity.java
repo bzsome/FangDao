@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
@@ -17,12 +18,20 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.bzchao.chao.fangdao.bootReceiver.device.MyDeviceManager;
+import com.bzchao.chao.fangdao.photo.MyPhotoManager;
+import com.example.httpserver.MyHttpServer2;
+import com.example.httpserver.MyServer;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
+import java.io.IOException;
+
 public class SettingActivity extends AppCompatActivity {
-    Button btnReg, btnHidden, btnShow;
+    public final static String TAG = "SharkChilli";
+
+    Button btnReg, btnHidden, btnShow, takePhoto;
     SettingActivity context;
+    private MyServer mMyServer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +43,20 @@ public class SettingActivity extends AppCompatActivity {
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(view -> Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show());
+
         init();
+
+        try {
+            mMyServer = new MyServer(this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            MyHttpServer2 myHttpServer = new MyHttpServer2(context, 17000);
+            myHttpServer.start(3000, false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void init() {
@@ -51,6 +73,11 @@ public class SettingActivity extends AppCompatActivity {
         btnShow.setOnClickListener(v -> {
             PackageManager p = context.getPackageManager();
             p.setComponentEnabledSetting(getComponentName(), PackageManager.COMPONENT_ENABLED_STATE_DEFAULT, PackageManager.DONT_KILL_APP);
+        });
+
+        takePhoto = findViewById(R.id.takePhoto);
+        takePhoto.setOnClickListener(v -> {
+            new MyPhotoManager(context).takePhoto();
         });
     }
 
@@ -136,4 +163,15 @@ public class SettingActivity extends AppCompatActivity {
                 }).create();
         dialog.show();
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mMyServer != null) {
+            mMyServer.closeAllConnections();
+            mMyServer = null;
+            Log.e(TAG, "app pause, so web server close");
+        }
+    }
+
 }

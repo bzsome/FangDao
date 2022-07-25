@@ -123,6 +123,9 @@ public class TakePictureManger {
      * 这里需要加上睡眠时间
      */
     public void cameraTakePhoto(final String betweenStr) {
+        if (mPreview == null) {
+            Toast.makeText(mContext, "cameraError== mPreview is null", Toast.LENGTH_SHORT).show();
+        }
         if (mPreview.isCameraError()) {
             Toast.makeText(mContext, "cameraError==", Toast.LENGTH_SHORT).show();
             return;
