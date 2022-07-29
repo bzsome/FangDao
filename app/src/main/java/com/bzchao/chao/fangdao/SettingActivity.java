@@ -19,6 +19,9 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.bzchao.chao.fangdao.bootReceiver.device.MyDeviceManager;
 import com.bzchao.chao.fangdao.photo.MyPhotoManager;
+import com.bzchao.webserver.client.WebServerRunner;
+import com.bzchao.webserver.config.WebServerConfig;
+import com.example.chao_common.utils.FileUtils;
 import com.example.httpserver.MyHttpServer2;
 import com.example.httpserver.MyServer;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -27,10 +30,10 @@ import com.google.android.material.snackbar.Snackbar;
 import java.io.IOException;
 
 public class SettingActivity extends AppCompatActivity {
-    public final static String TAG = "SharkChilli";
+    public final static String TAG = "SettingActivity";
 
-    Button btnReg, btnHidden, btnShow, takePhoto;
-    SettingActivity context;
+    private Button btnReg, btnHidden, btnShow, takePhoto, webServer;
+    private SettingActivity context;
     private MyServer mMyServer;
 
     @Override
@@ -44,22 +47,11 @@ public class SettingActivity extends AppCompatActivity {
         fab.setOnClickListener(view -> Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show());
 
-        init();
+        initBtn();
 
-        try {
-            mMyServer = new MyServer(this);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        try {
-            MyHttpServer2 myHttpServer = new MyHttpServer2(context, 17000);
-            myHttpServer.start(3000, false);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
-    public void init() {
+    public void initBtn() {
         context = this;
         btnReg = findViewById(R.id.actionDevice);
         btnReg.setOnClickListener(v -> new MyDeviceManager(context).registerDevicePolicyManager());
@@ -78,6 +70,36 @@ public class SettingActivity extends AppCompatActivity {
         takePhoto = findViewById(R.id.takePhoto);
         takePhoto.setOnClickListener(v -> {
             new MyPhotoManager(context).takePhoto();
+        });
+
+        webServer = findViewById(R.id.webServer);
+        webServer.setOnClickListener(v -> {
+            try {
+                mMyServer = new MyServer(this);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                MyHttpServer2 myHttpServer = new MyHttpServer2(context, 17000);
+                myHttpServer.start(3000, false);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            new Thread(() -> {
+                WebServerConfig.getInstance().setUPLOAD_DIR(FileUtils.getRootFile(context).getAbsolutePath());
+                WebServerConfig.getInstance().setDISK_PATH(FileUtils.getRootFile(context).getAbsolutePath());
+                WebServerConfig.getInstance().setWEB_DOC(FileUtils.getRootFile(context).getAbsolutePath() + "/00www");
+                WebServerRunner.startServer();
+            }).start();
+            try {
+                // 核心代码
+                Uri uri = Uri.parse("http://127.0.0.1:" + WebServerConfig.getInstance().getPORT());
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                // startActivity(intent);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         });
     }
 

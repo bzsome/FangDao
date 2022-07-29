@@ -7,3 +7,6 @@
 #### WEB控制
 
  打开 http://127.0.0.1:17123
+
+
+adb kill-server && adb start-server

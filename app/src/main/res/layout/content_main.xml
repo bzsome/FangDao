@@ -36,10 +36,18 @@
         android:text="显示图标" />
 
     <Button
+        android:id="@+id/webServer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Web服务" />
+
+    <Button
         android:id="@+id/takePhoto"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="拍照" />
+
 
 </LinearLayout>

@@ -15,10 +15,13 @@ buildscript {
     }
 }
 
+
 allprojects {
     repositories {
         google()
         jcenter()
+        mavenLocal()
+        mavenCentral()
     }
 }
 

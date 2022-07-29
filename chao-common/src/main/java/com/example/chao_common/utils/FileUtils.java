@@ -8,6 +8,9 @@ import java.io.File;
 import java.util.Objects;
 
 public class FileUtils {
+    /**
+     * 获取sd卡根目录
+     */
     public static File getRootFile(Context context) {
         File file;
         if (Build.VERSION.SDK_INT >= 29) {
