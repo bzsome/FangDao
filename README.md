@@ -10,3 +10,8 @@
 
 
 adb kill-server && adb start-server
+
+
+意外的元素 (uri:"", local:"base-extension")。所需元素为<{}codename>,<{}layoutlib>,<{}api-level>
+
+升级com.android.tools.build:gradle版本

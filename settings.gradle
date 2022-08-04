@@ -1,3 +1,4 @@
 include ':app'
 include ':http-server'
 include ':chao-common'
+include ':chao-photo'

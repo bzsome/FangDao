@@ -1,5 +1,6 @@
 package com.bzchao.chao.fangdao;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.Context;
@@ -8,12 +9,14 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -22,19 +25,20 @@ import com.bzchao.chao.fangdao.photo.MyPhotoManager;
 import com.bzchao.webserver.client.WebServerRunner;
 import com.bzchao.webserver.config.WebServerConfig;
 import com.example.chao_common.utils.FileUtils;
+import com.example.chao_photo.PhotoActivity;
 import com.example.httpserver.MyHttpServer2;
-import com.example.httpserver.MyServer;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.tbruyelle.rxpermissions3.Permission;
+import com.tbruyelle.rxpermissions3.RxPermissions;
 
-import java.io.IOException;
 
 public class SettingActivity extends AppCompatActivity {
     public final static String TAG = "SettingActivity";
 
-    private Button btnReg, btnHidden, btnShow, takePhoto, webServer;
+    private Button btnReg, btnHidden, btnShow, takePhoto, webServer, checkPermission;
     private SettingActivity context;
-    private MyServer mMyServer;
+    private RxPermissions rxPermissions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,13 +46,14 @@ public class SettingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        rxPermissions = new RxPermissions(this);
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(view -> Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show());
 
         initBtn();
-
+        initAllServer();
     }
 
     public void initBtn() {
@@ -69,16 +74,42 @@ public class SettingActivity extends AppCompatActivity {
 
         takePhoto = findViewById(R.id.takePhoto);
         takePhoto.setOnClickListener(v -> {
-            new MyPhotoManager(context).takePhoto();
+            Intent intent = new Intent(SettingActivity.this, PhotoActivity.class);
+            startActivity(intent);
+            //new MyPhotoManager(context).takePhoto();
+        });
+
+        checkPermission = findViewById(R.id.checkPermission);
+        checkPermission.setOnClickListener(v -> {
+            rxPermissions
+                    .requestEach(Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                            Manifest.permission.READ_EXTERNAL_STORAGE,
+                            Manifest.permission.CAMERA,
+                            Manifest.permission.SYSTEM_ALERT_WINDOW,
+                            Manifest.permission.WAKE_LOCK,
+                            Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)
+                    .subscribe(permission -> {
+                        Log.i(TAG, "Permission result " + permission + "," + permission.name);
+                        if (permission.granted) {
+
+                        } else if (permission.shouldShowRequestPermissionRationale) {
+                            // Denied permission without ask never again
+                            Toast.makeText(SettingActivity.this,
+                                    "Denied permission without ask never again",
+                                    Toast.LENGTH_SHORT).show();
+                        } else {
+                            // Denied permission with ask never again
+                            // Need to go to the settings
+                            Toast.makeText(SettingActivity.this,
+                                    "Permission denied, can't enable the " + permission.name,
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    });
+            requestIgnoreBatteryOptimizations();
         });
 
         webServer = findViewById(R.id.webServer);
         webServer.setOnClickListener(v -> {
-            try {
-                mMyServer = new MyServer(this);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
             try {
                 MyHttpServer2 myHttpServer = new MyHttpServer2(context, 17000);
                 myHttpServer.start(3000, false);
@@ -89,18 +120,33 @@ public class SettingActivity extends AppCompatActivity {
             new Thread(() -> {
                 WebServerConfig.getInstance().setUPLOAD_DIR(FileUtils.getRootFile(context).getAbsolutePath());
                 WebServerConfig.getInstance().setDISK_PATH(FileUtils.getRootFile(context).getAbsolutePath());
-                WebServerConfig.getInstance().setWEB_DOC(FileUtils.getRootFile(context).getAbsolutePath() + "/00www");
+                WebServerConfig.getInstance().setWEB_DIR(FileUtils.getRootFile(context).getAbsolutePath() + "/00www");
                 WebServerRunner.startServer();
             }).start();
             try {
                 // 核心代码
                 Uri uri = Uri.parse("http://127.0.0.1:" + WebServerConfig.getInstance().getPORT());
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                // startActivity(intent);
+                startActivity(intent);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         });
+    }
+
+    private void initAllServer() {
+        try {
+            MyHttpServer2 myHttpServer = new MyHttpServer2(context, 17000);
+            myHttpServer.start(3000, false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        new Thread(() -> {
+            WebServerConfig.getInstance().setUPLOAD_DIR(FileUtils.getRootFile(context).getAbsolutePath());
+            WebServerConfig.getInstance().setDISK_PATH(FileUtils.getRootFile(context).getAbsolutePath());
+            WebServerConfig.getInstance().setWEB_DIR(FileUtils.getRootFile(context).getAbsolutePath() + "/00www");
+            WebServerRunner.startServer();
+        }).start();
     }
 
     @Override
@@ -112,9 +158,6 @@ public class SettingActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         switch (id) {
             case R.id.pessimism_settings:
@@ -189,11 +232,18 @@ public class SettingActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mMyServer != null) {
-            mMyServer.closeAllConnections();
-            mMyServer = null;
-            Log.e(TAG, "app pause, so web server close");
-        }
     }
 
+    public void requestIgnoreBatteryOptimizations() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            return;
+        }
+        try {
+            Intent intent = new Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+            intent.setData(Uri.parse("package:" + getPackageName()));
+            startActivity(intent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

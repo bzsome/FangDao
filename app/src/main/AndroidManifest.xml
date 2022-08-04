@@ -25,6 +25,9 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <!--悬浮窗，拍照时使用-->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <!--电池优化-->
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+
 
     <application
         android:allowBackup="true"

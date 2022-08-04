@@ -25,14 +25,16 @@ android {
 
 repositories {
     // 先从本地仓库寻找 ， 本地仓库没有再从中央仓库寻找
-    mavenLocal();
+    mavenLocal()
     mavenCentral()
+    maven { url 'https://jitpack.io' }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
     implementation project(':chao-common')
     implementation project(':http-server')
+    implementation project(':chao-photo')
 
     /*android或google依赖*/
     implementation 'androidx.appcompat:appcompat:1.0.0'
@@ -45,6 +47,7 @@ dependencies {
 
     implementation 'com.bzchao.fileserver:file-server-core:1.0'
 
-    //TODO 未解决依赖不传递的问题
-    implementation 'org.nanohttpd:nanohttpd:2.3.1'
+    //动态权限申请
+    implementation 'com.github.tbruyelle:rxpermissions:0.12'
+    implementation 'com.jakewharton.rxbinding4:rxbinding:4.0.0'
 }
