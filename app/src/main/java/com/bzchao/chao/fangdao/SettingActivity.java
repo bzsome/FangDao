@@ -16,27 +16,25 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.Toast;
 
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.bzchao.chao.fangdao.bootReceiver.device.MyDeviceManager;
-import com.bzchao.chao.fangdao.photo.MyPhotoManager;
 import com.bzchao.webserver.client.WebServerRunner;
 import com.bzchao.webserver.config.WebServerConfig;
 import com.example.chao_common.utils.FileUtils;
 import com.example.chao_photo.PhotoActivity;
+import com.example.chao_photo.photo.MyPhotoManager;
 import com.example.httpserver.MyHttpServer2;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
-import com.tbruyelle.rxpermissions3.Permission;
 import com.tbruyelle.rxpermissions3.RxPermissions;
 
 
 public class SettingActivity extends AppCompatActivity {
     public final static String TAG = "SettingActivity";
 
-    private Button btnReg, btnHidden, btnShow, takePhoto, webServer, checkPermission;
+    private Button btnReg, btnHidden, btnShow, takePhotoPage, webServer, checkPermission;
     private SettingActivity context;
     private RxPermissions rxPermissions;
 
@@ -72,11 +70,10 @@ public class SettingActivity extends AppCompatActivity {
             p.setComponentEnabledSetting(getComponentName(), PackageManager.COMPONENT_ENABLED_STATE_DEFAULT, PackageManager.DONT_KILL_APP);
         });
 
-        takePhoto = findViewById(R.id.takePhoto);
-        takePhoto.setOnClickListener(v -> {
+        takePhotoPage = findViewById(R.id.takePhotoPage);
+        takePhotoPage.setOnClickListener(v -> {
             Intent intent = new Intent(SettingActivity.this, PhotoActivity.class);
             startActivity(intent);
-            //new MyPhotoManager(context).takePhoto();
         });
 
         checkPermission = findViewById(R.id.checkPermission);

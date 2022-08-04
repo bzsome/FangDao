@@ -1,10 +1,10 @@
-package com.bzchao.chao.fangdao.photo;
+package com.example.chao_photo.photo;
 
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
+import android.util.Log;
 
-import com.bzchao.chao.fangdao.Until.MyLog;
 
 public class PhotoWindowService extends Service {
     private static PhotoWindowService instance;
@@ -15,7 +15,7 @@ public class PhotoWindowService extends Service {
 
     @Override
     public void onCreate() {
-        MyLog.e("PhotoWindowService", "onCreate()");
+        Log.e("PhotoWindowService", "onCreate()");
         super.onCreate();
     }
 
@@ -26,7 +26,7 @@ public class PhotoWindowService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        MyLog.d("PhotoWindowService", "onStartCommand");
+        Log.d("PhotoWindowService", "onStartCommand");
         if (instance == null) {
             synchronized (PhotoWindowService.class) {
                 if (instance == null) {
@@ -40,7 +40,7 @@ public class PhotoWindowService extends Service {
 
     @Override
     public void onDestroy() {
-        MyLog.e("PhotoWindowService", "onDestroy()");
+        Log.e("PhotoWindowService", "onDestroy()");
         removeSmallWindow();
         instance = null;
         super.onDestroy();
@@ -50,7 +50,7 @@ public class PhotoWindowService extends Service {
      * 将小悬浮窗添加到屏幕上
      */
     private void createSmallWindow() {
-        MyLog.d("PhotoWindowService", "createSmallWindow");
+        Log.d("PhotoWindowService", "createSmallWindow");
         TakePictureManger.getInstance(getApplicationContext()).createSmallWindow();
     }
 

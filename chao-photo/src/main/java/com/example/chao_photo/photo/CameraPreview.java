@@ -1,4 +1,4 @@
-package com.bzchao.chao.fangdao.photo;
+package com.example.chao_photo.photo;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -8,8 +8,6 @@ import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.widget.Toast;
-
-import com.bzchao.chao.fangdao.Until.MyLog;
 
 /**
  * 定义一个预览类
@@ -73,7 +71,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         try {
             mCamera.stopPreview();
         } catch (Exception e) {
-            MyLog.d(TAG, "当Surface改变后，停止预览出错");
+            Log.d(TAG, "当Surface改变后，停止预览出错");
             e.printStackTrace();
         }
 
@@ -85,7 +83,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
             startPreview();
         } catch (Exception e) {
             cameraError = true;
-            MyLog.e(TAG, "预览Camera出错");
+            Log.e(TAG, "预览Camera出错");
             e.printStackTrace();
         }
     }
@@ -135,7 +133,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
                 camera = Camera.open(cameraType);
                 camera.setDisplayOrientation(displayOrientation);
             } catch (Exception e) {
-                MyLog.e(TAG, "打开Camera失败,请重新检查");
+                Log.e(TAG, "打开Camera失败,请重新检查");
                 e.printStackTrace();
             }
             return camera;

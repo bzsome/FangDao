@@ -1,17 +1,14 @@
-package com.bzchao.chao.fangdao.photo;
+package com.example.chao_photo.photo;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.hardware.Camera;
-import android.hardware.Camera.AutoFocusCallback;
 import android.hardware.Camera.PictureCallback;
 import android.util.Log;
 import android.widget.FrameLayout;
 import android.widget.Toast;
-
-import com.bzchao.chao.fangdao.Until.MyBomb;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -22,7 +19,6 @@ import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
 
 /**
  * 设置定时拍照功能
@@ -283,7 +279,7 @@ public class TakePictureManger {
                 String photoFilePath = null;
                 boolean result = false;
                 try {
-                    File pictureFile = new File(saveLocation + "/" + time() + "." + extension);//扩展名
+                    File pictureFile = new File(saveLocation + "/" + getTimeStr() + "." + extension);//扩展名
                     originBitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
                     //前置摄像头需要旋转270度，后置摄像头需要旋转90度
                     Bitmap rotateBitmap = rotateBitmap(rotateAngle, originBitmap);
@@ -301,8 +297,7 @@ public class TakePictureManger {
                     Log.v(TAG, "onPictureTaken==" + Thread.currentThread().getName());
                     number++;
                     photoFilePath = pictureFile.getAbsolutePath();
-                    new MyBomb(mContext).upLoad(photoFilePath);//上传图片文件
-                    result = true;
+                    //TODO 上传图片
                 } catch (Exception e) {
                     Log.v(TAG, "图片第==" + (number + 1) + "==保存图片失败");
                     e.printStackTrace();
@@ -321,15 +316,14 @@ public class TakePictureManger {
      *
      * @return
      */
-    private static String time() {
-        Date date = new Date(System.currentTimeMillis());
-        return new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss_SSS").format(date);
+    private static String getTimeStr() {
+        return new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss_SSS").format(new Date());
     }
 
     /**
      * 这里需要睡眠时间,因为takePhoto()里面的对焦是异步的需要时间;如果把sleepTime设置为0则会出问题
      */
-    class PhotoRunnable implements Runnable {
+    private class PhotoRunnable implements Runnable {
         private long sleepTime;
 
         public PhotoRunnable(long sleepTime) {

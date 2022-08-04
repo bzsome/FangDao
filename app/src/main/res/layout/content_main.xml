@@ -43,7 +43,7 @@
         android:text="Web服务" />
 
     <Button
-        android:id="@+id/takePhoto"
+        android:id="@+id/takePhotoPage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
