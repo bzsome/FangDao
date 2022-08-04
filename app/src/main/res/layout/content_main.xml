@@ -5,8 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:showIn="@layout/activity_main">
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
     <TextView
         android:layout_width="wrap_content"
@@ -15,11 +14,11 @@
         android:text="Hello World!" />
 
     <Button
-        android:id="@+id/actionDevice"
+        android:id="@+id/actionDevicePage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="激活设备管理器" />
+        android:text="设备管理器配置" />
 
     <Button
         android:id="@+id/hiddenDevice"

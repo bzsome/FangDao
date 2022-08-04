@@ -1,7 +1,0 @@
-<device-admin xmlns:android="http://schemas.android.com/apk/res/android">
-    2   <uses-policies>
-    4     <watch-login />      <!-- //监控屏幕解锁尝试次数-->
-    5     <reset-password />   <!-- //更改屏幕解锁密码-->
-    6     <force-lock />     <!--   //设备自动解锁-->
-    11   </uses-policies>
-    12 </device-admin>

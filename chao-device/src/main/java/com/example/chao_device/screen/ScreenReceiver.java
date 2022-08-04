@@ -1,4 +1,4 @@
-package com.bzchao.chao.fangdao.bootReceiver.Screen;
+package com.example.chao_device.screen;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

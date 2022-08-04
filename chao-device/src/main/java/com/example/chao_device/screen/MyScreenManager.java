@@ -1,4 +1,4 @@
-package com.bzchao.chao.fangdao.bootReceiver.Screen;
+package com.example.chao_device.screen;
 /**
  * Created by Phil on 2017/7/18.
  */

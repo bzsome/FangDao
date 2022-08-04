@@ -19,12 +19,11 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import com.bzchao.chao.fangdao.bootReceiver.device.MyDeviceManager;
 import com.bzchao.webserver.client.WebServerRunner;
 import com.bzchao.webserver.config.WebServerConfig;
 import com.example.chao_common.utils.FileUtils;
+import com.example.chao_device.DeviceActivity;
 import com.example.chao_photo.PhotoActivity;
-import com.example.chao_photo.photo.MyPhotoManager;
 import com.example.httpserver.MyHttpServer2;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -56,8 +55,6 @@ public class SettingActivity extends AppCompatActivity {
 
     public void initBtn() {
         context = this;
-        btnReg = findViewById(R.id.actionDevice);
-        btnReg.setOnClickListener(v -> new MyDeviceManager(context).registerDevicePolicyManager());
 
         btnHidden = findViewById(R.id.hiddenDevice);
         btnHidden.setOnClickListener(v -> {
@@ -70,6 +67,11 @@ public class SettingActivity extends AppCompatActivity {
             p.setComponentEnabledSetting(getComponentName(), PackageManager.COMPONENT_ENABLED_STATE_DEFAULT, PackageManager.DONT_KILL_APP);
         });
 
+        Button actionDevicePage = findViewById(R.id.actionDevicePage);
+        actionDevicePage.setOnClickListener(v -> {
+            Intent intent = new Intent(SettingActivity.this, DeviceActivity.class);
+            startActivity(intent);
+        });
         takePhotoPage = findViewById(R.id.takePhotoPage);
         takePhotoPage.setOnClickListener(v -> {
             Intent intent = new Intent(SettingActivity.this, PhotoActivity.class);
@@ -163,9 +165,6 @@ public class SettingActivity extends AppCompatActivity {
             case R.id.notifi_settings:
                 gotoNotificationAccessSetting(context);
                 return true;
-            case R.id.remove_device:
-                showRemoveDevice();
-                return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -211,20 +210,6 @@ public class SettingActivity extends AppCompatActivity {
         }
     }
 
-    public void showRemoveDevice() {
-        AlertDialog dialog = new AlertDialog.Builder(context)
-                .setIcon(R.mipmap.ic_launcher)//设置标题的图片
-                .setTitle("提示")//设置对话框的标题
-                .setMessage("是否禁用设备管理器？")//设置对话框的内容
-                //设置对话框的按钮
-                .setNegativeButton("取消", null)
-                .setPositiveButton("确定", (dialog1, which) -> {
-                    new MyDeviceManager(context).onRemoveActivate();
-                    Toast.makeText(context, "已禁用设备管理器", Toast.LENGTH_SHORT).show();
-                    dialog1.dismiss();
-                }).create();
-        dialog.show();
-    }
 
     @Override
     protected void onDestroy() {

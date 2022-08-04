@@ -1,0 +1,5 @@
+<resources>
+    <string name="device_label">设备安全管理</string>
+    <string name="receiver_description">点击激活设备管理器</string>
+    <string name="remove_device">禁用设备管理器</string>
+</resources>

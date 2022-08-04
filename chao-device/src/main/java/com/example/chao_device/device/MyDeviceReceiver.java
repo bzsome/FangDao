@@ -1,4 +1,4 @@
-package com.bzchao.chao.fangdao.bootReceiver.device;
+package com.example.chao_device.device;
 
 import android.app.admin.DeviceAdminReceiver;
 import android.app.admin.DevicePolicyManager;
@@ -6,21 +6,20 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
+import android.util.Log;
 import android.widget.Toast;
 
-import com.bzchao.chao.fangdao.MyServiceManager;
-import com.bzchao.chao.fangdao.Until.MyLog;
 
 public class MyDeviceReceiver extends DeviceAdminReceiver {
     @Override
     public DevicePolicyManager getManager(Context context) {
-        MyLog.e("AdminReceiever", "------" + "getManager" + "------");
+        Log.e("AdminReceiver", "------" + "getManager" + "------");
         return super.getManager(context);
     }
 
     @Override
     public ComponentName getWho(Context context) {
-        MyLog.e("AdminReceiever", "------" + "getWho" + "------");
+        Log.e("AdminReceiver", "------" + "getWho" + "------");
         return super.getWho(context);
     }
 
@@ -29,13 +28,13 @@ public class MyDeviceReceiver extends DeviceAdminReceiver {
      */
     @Override
     public void onDisabled(Context context, Intent intent) {
-        MyLog.e("AdminReceiever", "------" + "onDisabled" + "------");
+        Log.e("AdminReceiver", "------" + "onDisabled" + "------");
         super.onDisabled(context, intent);
     }
 
     @Override
     public CharSequence onDisableRequested(Context context, Intent intent) {
-        MyLog.e("AdminReceiever", "------" + "onDisableRequested" + "------");
+        Log.e("AdminReceiver", "------" + "onDisableRequested" + "------");
         new MyDeviceManager(context).lockDevice();
         return "";
     }
@@ -45,39 +44,39 @@ public class MyDeviceReceiver extends DeviceAdminReceiver {
      */
     @Override
     public void onEnabled(Context context, Intent intent) {
-        MyLog.e("AdminReceiever", "------" + "onEnabled" + "------");
+        Log.e("AdminReceiver", "------" + "onEnabled" + "------");
         Toast.makeText(context, "启动设备管理", Toast.LENGTH_SHORT).show();
         super.onEnabled(context, intent);
     }
 
     @Override
     public void onPasswordChanged(Context context, Intent intent) {
-        MyLog.e("AdminReceiever", "------" + "onPasswordChanged" + "------");
+        Log.e("AdminReceiver", "------" + "onPasswordChanged" + "------");
         super.onPasswordChanged(context, intent);
     }
 
     @Override
     public void onPasswordFailed(Context context, Intent intent) {
-        MyLog.e("AdminReceiever", "------" + "onPasswordFailed" + "------");
+        Log.e("AdminReceiver", "------" + "onPasswordFailed" + "------");
         super.onPasswordFailed(context, intent);
     }
 
     @Override
     public void onPasswordSucceeded(Context context, Intent intent) {
-        MyLog.e("AdminReceiever", "------" + "onPasswordSucceeded" + "------");
+        Log.e("AdminReceiver", "------" + "onPasswordSucceeded" + "------");
         super.onPasswordSucceeded(context, intent);
     }
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        MyLog.e("AdminReceiever", "------" + "onReceive" + "------");
-        new MyServiceManager(context).statService();
+        Log.e("AdminReceiver", "------" + "onReceive" + "------");
+        //TODO 处理事件
         super.onReceive(context, intent);
     }
 
     @Override
     public IBinder peekService(Context myContext, Intent service) {
-        MyLog.e("AdminReceiever", "------" + "peekService" + "------");
+        Log.e("AdminReceiver", "------" + "peekService" + "------");
         return super.peekService(myContext, service);
     }
 }

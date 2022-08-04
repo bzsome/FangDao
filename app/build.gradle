@@ -35,6 +35,7 @@ dependencies {
     implementation project(':chao-common')
     implementation project(':http-server')
     implementation project(':chao-photo')
+    implementation project(':chao-device')
 
     /*android或google依赖*/
     implementation 'androidx.appcompat:appcompat:1.0.0'

@@ -1,24 +1,26 @@
-package com.bzchao.chao.fangdao.bootReceiver.receiver;
+package com.example.chao_device.receiver;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import com.bzchao.chao.fangdao.MyServiceManager;
-import com.bzchao.chao.fangdao.Until.MyLog;
+import android.util.Log;
 
-public class BootPhoneReceiver extends BroadcastReceiver {
+/**
+ * 监听暗码启动
+ */
+public class SecretCodeBootReceiver extends BroadcastReceiver {
     public static String SECRET_CODE_ACTION = "android.provider.Telephony.SECRET_CODE";
     private static final String TAG = "BootPhoneReceiver";
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        MyLog.e(TAG, "onReceive()");
+        Log.e(TAG, "onReceive()");
         if (intent.getAction() == null) {
-            MyLog.e(TAG, "Action() null");
+            Log.e(TAG, "Action() null");
             return;
         }
         if (intent.getAction().equals(SECRET_CODE_ACTION)) {
-            new MyServiceManager(context).statService();
+            //TODO 监听
         }
     }
 }

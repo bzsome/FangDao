@@ -4,7 +4,6 @@
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <!--允许联网 -->
     <uses-permission android:name="android.permission.INTERNET" />
     <!--获取GSM（2g）、WCDMA（联通3g）等网络状态的信息  -->
@@ -74,50 +73,6 @@
         <service
             android:name=".keepalive.AliveJobService"
             android:permission="android.permission.BIND_JOB_SERVICE" />
-        <service
-            android:name=".bootReceiver.receiver.NotificationListener"
-            android:label="系统安全(防盗)"
-            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
-            <intent-filter>
-                <action android:name="android.service.notification.NotificationListenerService" />
-            </intent-filter>
-        </service>
-
-        <receiver
-            android:name=".bootReceiver.device.MyDeviceReceiver"
-            android:description="@string/receiver_description"
-            android:label="@string/app_name"
-            android:permission="android.permission.BIND_DEVICE_ADMIN">
-            <meta-data
-                android:name="android.app.device_admin"
-                android:resource="@xml/device_admin" />
-            <intent-filter>
-                <!-- 此处必须设定该Action，不设定则无法启动设备管理器，之前版本可启动但看不到的bug已被修复 -->
-                <action android:name="android.app.action.DEVICE_ADMIN_ENABLED" />
-            </intent-filter>
-        </receiver>
-        <receiver
-            android:name=".bootReceiver.receiver.BootReceiver"
-            android:enabled="true"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <action android:name="android.intent.ACTION_USER_PRESENT" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </receiver>
-        <receiver
-            android:name=".bootReceiver.receiver.BootPhoneReceiver"
-            android:enabled="true"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.provider.Telephony.SECRET_CODE" />
-                <data
-                    android:host="1522"
-                    android:scheme="android_secret_code" />
-            </intent-filter>
-        </receiver>
 
     </application>
 

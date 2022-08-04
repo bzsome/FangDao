@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".PhotoActivity">
+    tools:context=".DeviceActivity">
 
     <TextView
         android:layout_width="wrap_content"
@@ -23,11 +23,18 @@
         android:paddingTop="20px">
 
         <Button
-            android:id="@+id/takePhoto"
+            android:id="@+id/actionDevice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="拍照" />
+            android:text="激活设备管理器" />
+
+        <Button
+            android:id="@+id/disableDevice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="禁用设备管理器" />
 
     </LinearLayout>
 
