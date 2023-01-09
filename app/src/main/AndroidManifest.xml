@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.bzchao.chao.fangdao">
+    package="com.bzchao.fangdao.app">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -45,34 +45,6 @@
                     android:scheme="fangdao" />
             </intent-filter>
         </activity>
-
-        <activity
-            android:name=".keepalive.SinglePixelActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize|navigation|keyboard"
-            android:excludeFromRecents="true"
-            android:finishOnTaskLaunch="false"
-            android:launchMode="singleInstance"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <!--注册Service-->
-        <service
-            android:name=".keepalive.DaemonService"
-            android:enabled="true"
-            android:exported="true"
-            android:process=":daemon_service" />
-
-        <service
-            android:name=".keepalive.CancelNoticeService"
-            android:enabled="true"
-            android:exported="true"
-            android:process=":service" />
-        <service
-            android:name=".keepalive.PlayerMusicService"
-            android:enabled="true"
-            android:exported="true"
-            android:process=":music_service" />
-        <service
-            android:name=".keepalive.AliveJobService"
-            android:permission="android.permission.BIND_JOB_SERVICE" />
 
     </application>
 

@@ -1,4 +1,4 @@
-package com.bzchao.chao.fangdao;
+package com.bzchao.fangdao.app;
 
 import static org.junit.Assert.assertEquals;
 
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
     public void useAppContext() {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        assertEquals("com.bzchao.chao.fangdao", appContext.getPackageName());
+        assertEquals("com.bzchao.fangdao.app", appContext.getPackageName());
     }
 }

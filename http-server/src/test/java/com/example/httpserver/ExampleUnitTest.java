@@ -1,4 +1,4 @@
-package com.example.httpserver;
+package com.bzchao.fangdao.httpserver;
 
 import org.junit.Test;
 

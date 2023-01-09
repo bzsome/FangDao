@@ -1,4 +1,4 @@
-package com.example.chao_device;
+package com.bzchao.fangdao.device;
 
 import org.junit.Test;
 

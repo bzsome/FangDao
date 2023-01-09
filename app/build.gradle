@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 28
     defaultConfig {
-        applicationId "com.bzchao.chao.fangdao"
+        applicationId "com.bzchao.fangdao.app"
         minSdkVersion 21
         targetSdkVersion 28
         versionCode 1
@@ -34,8 +34,9 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
     implementation project(':chao-common')
     implementation project(':http-server')
-    implementation project(':chao-photo')
+    implementation project(':chao-camera')
     implementation project(':chao-device')
+    implementation project(':chao-alive')
 
     /*android或google依赖*/
     implementation 'androidx.appcompat:appcompat:1.0.0'

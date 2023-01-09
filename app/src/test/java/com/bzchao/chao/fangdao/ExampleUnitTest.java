@@ -1,4 +1,4 @@
-package com.bzchao.chao.fangdao;
+package com.bzchao.fangdao.app;
 
 import org.junit.Test;
 
