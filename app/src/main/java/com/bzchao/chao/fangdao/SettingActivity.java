@@ -1,7 +1,6 @@
 package com.bzchao.chao.fangdao;
 
 import android.Manifest;
-import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -13,27 +12,31 @@ import android.provider.Settings;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import com.bzchao.webserver.client.WebServerRunner;
+import com.bzchao.chao.fangdao.until.NetworkUtil;
+import com.bzchao.webserver.WebServerApplication;
 import com.bzchao.webserver.config.WebServerConfig;
 import com.example.chao_common.utils.FileUtils;
 import com.example.chao_device.DeviceActivity;
 import com.example.chao_photo.PhotoActivity;
-import com.example.httpserver.MyHttpServer2;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.tbruyelle.rxpermissions3.RxPermissions;
+
+import java.util.Arrays;
+import java.util.List;
 
 
 public class SettingActivity extends AppCompatActivity {
     public final static String TAG = "SettingActivity";
 
-    private Button btnReg, btnHidden, btnShow, takePhotoPage, webServer, checkPermission;
+    private Button btnHidden, btnShow, takePhotoPage, webServer, checkPermission;
     private SettingActivity context;
     private RxPermissions rxPermissions;
 
@@ -46,12 +49,15 @@ public class SettingActivity extends AppCompatActivity {
         rxPermissions = new RxPermissions(this);
 
         FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(view -> Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show());
+        fab.setOnClickListener(view -> Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action", null).show());
 
         initBtn();
         initAllServer();
+
+        List<String> ipList = NetworkUtil.getIpAddress();
+        System.out.println(Arrays.toString(ipList.toArray()));
     }
+
 
     public void initBtn() {
         context = this;
@@ -80,72 +86,24 @@ public class SettingActivity extends AppCompatActivity {
 
         checkPermission = findViewById(R.id.checkPermission);
         checkPermission.setOnClickListener(v -> {
-            rxPermissions
-                    .requestEach(Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                            Manifest.permission.READ_EXTERNAL_STORAGE,
-                            Manifest.permission.CAMERA,
-                            Manifest.permission.SYSTEM_ALERT_WINDOW,
-                            Manifest.permission.WAKE_LOCK,
-                            Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)
-                    .subscribe(permission -> {
-                        Log.i(TAG, "Permission result " + permission + "," + permission.name);
-                        if (permission.granted) {
+            rxPermissions.requestEach(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA, Manifest.permission.SYSTEM_ALERT_WINDOW, Manifest.permission.WAKE_LOCK, Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS).subscribe(permission -> {
+                Log.i(TAG, "Permission result " + permission + "," + permission.name);
+                if (permission.granted) {
 
-                        } else if (permission.shouldShowRequestPermissionRationale) {
-                            // Denied permission without ask never again
-                            Toast.makeText(SettingActivity.this,
-                                    "Denied permission without ask never again",
-                                    Toast.LENGTH_SHORT).show();
-                        } else {
-                            // Denied permission with ask never again
-                            // Need to go to the settings
-                            Toast.makeText(SettingActivity.this,
-                                    "Permission denied, can't enable the " + permission.name,
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                } else if (permission.shouldShowRequestPermissionRationale) {
+                    Toast.makeText(SettingActivity.this, "Denied permission without ask never again", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(SettingActivity.this, "Permission denied, can't enable the " + permission.name, Toast.LENGTH_SHORT).show();
+                }
+            });
             requestIgnoreBatteryOptimizations();
         });
 
         webServer = findViewById(R.id.webServer);
-        webServer.setOnClickListener(v -> {
-            try {
-                MyHttpServer2 myHttpServer = new MyHttpServer2(context, 17000);
-                myHttpServer.start(3000, false);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            new Thread(() -> {
-                WebServerConfig.getInstance().setUPLOAD_DIR(FileUtils.getRootFile(context).getAbsolutePath());
-                WebServerConfig.getInstance().setDISK_PATH(FileUtils.getRootFile(context).getAbsolutePath());
-                WebServerConfig.getInstance().setWEB_DIR(FileUtils.getRootFile(context).getAbsolutePath() + "/00www");
-                WebServerRunner.startServer();
-            }).start();
-            try {
-                // 核心代码
-                Uri uri = Uri.parse("http://127.0.0.1:" + WebServerConfig.getInstance().getPORT());
-                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                startActivity(intent);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
+        webServer.setOnClickListener(this::onClick);
     }
 
     private void initAllServer() {
-        try {
-            MyHttpServer2 myHttpServer = new MyHttpServer2(context, 17000);
-            myHttpServer.start(3000, false);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        new Thread(() -> {
-            WebServerConfig.getInstance().setUPLOAD_DIR(FileUtils.getRootFile(context).getAbsolutePath());
-            WebServerConfig.getInstance().setDISK_PATH(FileUtils.getRootFile(context).getAbsolutePath());
-            WebServerConfig.getInstance().setWEB_DIR(FileUtils.getRootFile(context).getAbsolutePath() + "/00www");
-            WebServerRunner.startServer();
-        }).start();
     }
 
     @Override
@@ -158,17 +116,15 @@ public class SettingActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        switch (id) {
-            case R.id.pessimism_settings:
-                getAppDetailSettingIntent(context);
-                return true;
-            case R.id.notifi_settings:
-                gotoNotificationAccessSetting(context);
-                return true;
+        if (id == R.id.pessimism_settings) {
+            getAppDetailSettingIntent(context);
+            return true;
+        } else if (id == R.id.notifi_settings) {
+            gotoNotificationAccessSetting(context);
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
-
     }
 
     /**
@@ -228,4 +184,25 @@ public class SettingActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+
+    private void onClick(View v) {
+        initFileServer();
+        try {
+            Uri uri = Uri.parse("http://127.0.0.1:" + WebServerConfig.getPort());
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            startActivity(intent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void initFileServer() {
+        new Thread(() -> {
+            WebServerConfig.setUploadDir(FileUtils.getRootFile(context).getAbsolutePath());
+            WebServerConfig.setDiskPath(FileUtils.getRootFile(context).getAbsolutePath());
+            WebServerConfig.setWebDir(FileUtils.getRootFile(context).getAbsolutePath() + "/00www");
+            WebServerApplication.startServer();
+        }).start();
+    }
+
 }
